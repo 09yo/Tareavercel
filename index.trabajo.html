@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Studio 3D Animación: modelado de personajes, animación 3D, escenas y recursos para artistas.">
+  <title>Studio 3D Animación</title>
+  <style>
+    :root {
+      --bg: #080811; --panel: #131322; --panel2: #19192b;
+      --text: #f7f5ff; --muted: #b5b2c9; --pink: #ff4d91;
+      --cyan: #4bdcff; --line: rgba(255,255,255,.12);
+      --shadow: 0 18px 55px rgba(0,0,0,.35);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.65;
+      overflow-x: hidden;
+    }
+    a { color: inherit; }
+    .container { width: min(1120px, calc(100% - 40px)); margin: auto; }
+    .topbar {
+      position: absolute; z-index: 5; top: 0; left: 0; width: 100%;
+      padding: 20px 0;
+    }
+    .nav { display:flex; justify-content:space-between; align-items:center; gap:20px; }
+    .brand { font-weight:900; letter-spacing:.04em; text-decoration:none; }
+    .brand span { color:var(--pink); }
+    .nav-links { display:flex; gap:24px; flex-wrap:wrap; }
+    .nav-links a { color:var(--muted); text-decoration:none; font-size:.93rem; }
+    .nav-links a:hover { color:var(--cyan); }
+    .hero {
+      min-height: 690px; display:grid; align-items:center; position:relative;
+      padding: 120px 0 75px; isolation:isolate; overflow:hidden;
+      background:
+        radial-gradient(ellipse at 78% 40%, rgba(255,77,145,.18), transparent 34%),
+        radial-gradient(ellipse at 15% 80%, rgba(75,220,255,.13), transparent 35%),
+        linear-gradient(145deg,#10101d,#080811 65%);
+    }
+    .hero::before {
+      content:""; position:absolute; inset:22px; border:1px solid rgba(255,255,255,.22);
+      border-radius:28px; box-shadow:0 0 32px rgba(255,77,145,.16), inset 0 0 35px rgba(75,220,255,.08);
+      pointer-events:none; z-index:-1;
+    }
+    .hero-grid { display:grid; grid-template-columns:1.05fr .95fr; align-items:center; gap:35px; }
+    .eyebrow {
+      display:inline-flex; border:1px solid rgba(75,220,255,.65); color:var(--cyan);
+      border-radius:99px; padding:6px 15px; letter-spacing:.17em; text-transform:uppercase;
+      font-size:.72rem; margin-bottom:20px;
+    }
+    h1 { font-size:clamp(2.7rem,6vw,5.2rem); line-height:1.03; letter-spacing:-.045em; }
+    h1 span { color:var(--pink); text-shadow:0 0 30px rgba(255,77,145,.32); }
+    .hero-copy p { max-width:590px; color:var(--muted); font-size:1.08rem; margin:22px 0 28px; }
+    .actions { display:flex; flex-wrap:wrap; gap:12px; }
+    .button {
+      display:inline-flex; align-items:center; justify-content:center; padding:12px 21px;
+      border-radius:99px; text-decoration:none; font-weight:750; transition:.2s ease;
+      border:1px solid transparent;
+    }
+    .button:hover { transform:translateY(-3px); box-shadow:0 10px 28px rgba(255,77,145,.22); }
+    .primary { background:linear-gradient(110deg,var(--pink),#a638d5); color:white; }
+    .secondary { border-color:var(--line); background:rgba(255,255,255,.04); }
+    .hero-art { position:relative; min-height:440px; display:grid; place-items:center; }
+    .art-glow {
+      position:absolute; width:min(390px,85%); aspect-ratio:1; border-radius:50%;
+      background:radial-gradient(circle,rgba(75,220,255,.22),rgba(255,77,145,.10) 48%,transparent 70%);
+      filter:blur(12px);
+    }
+    .hero-art img {
+      position:relative; z-index:1; max-height:440px; max-width:100%; width:auto;
+      object-fit:contain; filter:drop-shadow(0 20px 35px rgba(0,0,0,.55));
+      border-radius:18px;
+    }
+    section { padding:82px 0; }
+    .section-head { text-align:center; margin:0 auto 34px; max-width:700px; }
+    .section-head h2 { font-size:clamp(1.9rem,4vw,2.7rem); line-height:1.2; }
+    .section-head h2 span { color:var(--cyan); }
+    .section-head p { color:var(--muted); margin-top:10px; }
+    .services { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+    .card {
+      background:linear-gradient(155deg,var(--panel2),var(--panel));
+      border:1px solid var(--line); border-radius:20px; padding:25px 22px;
+      box-shadow:var(--shadow); transition:.25s ease;
+    }
+    .card:hover { transform:translateY(-7px); border-color:rgba(255,77,145,.6); }
+    .icon { font-size:2rem; }
+    .card h3 { margin:12px 0 8px; font-size:1.12rem; }
+    .card p { color:var(--muted); font-size:.94rem; }
+    .price { display:block; margin-top:14px; color:var(--cyan); font-weight:800; }
+    .gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+    .gallery figure {
+      overflow:hidden; border:1px solid var(--line); border-radius:18px;
+      background:var(--panel); box-shadow:var(--shadow);
+    }
+    .gallery img {
+      width:100%; height:300px; object-fit:cover; display:block;
+      transition:transform .45s ease;
+    }
+    .gallery figure:hover img { transform:scale(1.045); }
+    .gallery figcaption { padding:14px 16px; color:var(--muted); }
+    .gallery figcaption strong { color:var(--text); display:block; margin-bottom:2px; }
+    .resources { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .resource {
+      display:flex; align-items:center; gap:14px; text-decoration:none;
+      background:var(--panel); border:1px solid var(--line); border-radius:15px;
+      padding:17px; transition:.2s;
+    }
+    .resource:hover { border-color:var(--cyan); transform:translateY(-3px); }
+    .resource .icon { font-size:1.6rem; }
+    .resource small { display:block; color:var(--muted); }
+    .location-box {
+      border:1px solid var(--line); border-radius:20px; overflow:hidden;
+      background:var(--panel); box-shadow:var(--shadow);
+    }
+    .location-box iframe { width:100%; height:390px; border:0; display:block; }
+    .location-note { padding:14px 18px; color:var(--muted); text-align:center; }
+    footer { border-top:1px solid var(--line); padding:35px 0; text-align:center; color:var(--muted); }
+    footer strong { color:var(--text); }
+    .footer-links { display:flex; justify-content:center; gap:18px; flex-wrap:wrap; margin-bottom:14px; }
+    .footer-links a { text-decoration:none; }
+    @media (max-width:850px) {
+      .hero-grid { grid-template-columns:1fr; text-align:center; }
+      .hero-copy p { margin-left:auto; margin-right:auto; }
+      .actions { justify-content:center; }
+      .hero-art { min-height:350px; }
+      .hero-art img { max-height:350px; }
+      .services { grid-template-columns:repeat(2,1fr); }
+      .resources { grid-template-columns:repeat(2,1fr); }
+    }
+    @media (max-width:560px) {
+      .container { width:min(100% - 30px,1120px); }
+      .nav { justify-content:center; flex-direction:column; }
+      .nav-links { justify-content:center; gap:14px; }
+      .hero { padding-top:145px; min-height:auto; }
+      .hero::before { inset:10px; border-radius:18px; }
+      .hero-art { min-height:290px; }
+      .hero-art img { max-height:290px; }
+      section { padding:62px 0; }
+      .services,.gallery,.resources { grid-template-columns:1fr; }
+      .gallery img { height:280px; }
+      .location-box iframe { height:320px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero" id="inicio">
+    <div class="topbar">
+      <nav class="container nav" aria-label="Navegación principal">
+        <a class="brand" href="#inicio">STUDIO <span>3D</span></a>
+        <div class="nav-links">
+          <a href="#servicios">Servicios</a>
+          <a href="#galeria">Portafolio</a>
+          <a href="#recursos">Recursos</a>
+          <a href="#ubicacion">Ubicación</a>
+        </div>
+      </nav>
+    </div>
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">Blender · Modelado · Animación</span>
+        <h1>Studio <span>3D</span><br>Animación</h1>
+        <p>Convertimos ideas en personajes y mundos 3D. Creamos modelos con personalidad, animaciones llenas de movimiento y escenas visuales inspiradas en el universo anime.</p>
+        <div class="actions">
+          <a class="button primary" href="#galeria">Ver portafolio</a>
+          <a class="button secondary" href="https://www.youtube.com/@CGMeetup" target="_blank" rel="noopener noreferrer">Explorar YouTube ↗</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="art-glow"></div>
+        <img src="images/personaje-anime-rojo.jpg" alt="Personaje 3D de estilo anime con vestuario rojo">
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="servicios">
+      <div class="container">
+        <div class="section-head">
+          <h2>Lo que hacemos <span>en 3D</span></h2>
+          <p>Del concepto al render final: creatividad, técnica y movimiento.</p>
+        </div>
+        <div class="services">
+          <article class="card">
+            <div class="icon">🧍</div><h3>Modelado de personajes</h3>
+            <p>Personajes originales con rostro, cabello, vestuario y detalles personalizados.</p>
+            <span class="price">Desde S/ 150</span>
+          </article>
+          <article class="card">
+            <div class="icon">💃</div><h3>Animación y baile</h3>
+            <p>Movimientos, poses y coreografías para dar vida a tus personajes.</p>
+            <span class="price">Desde S/ 200</span>
+          </article>
+          <article class="card">
+            <div class="icon">🎬</div><h3>Escenas y renders</h3>
+            <p>Iluminación, cámaras y escenarios para imágenes, clips y presentaciones.</p>
+            <span class="price">Desde S/ 80</span>
+          </article>
+          <article class="card">
+            <div class="icon">🎓</div><h3>Clases de Blender</h3>
+            <p>Aprende los fundamentos del modelado y la animación 3D paso a paso.</p>
+            <span class="price">S/ 40 por clase</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="galeria">
+      <div class="container">
+        <div class="section-head">
+          <h2>Galería <span>3D</span></h2>
+          <p>Una muestra de personajes y procesos de creación. Esta galería puede crecer con tus próximos proyectos.</p>
+        </div>
+        <div class="gallery">
+          <figure>
+            <img src="images/personaje-anime-rojo.jpg" alt="Personaje anime 3D con traje rojo en pose de referencia">
+            <figcaption><strong>Personaje estilo anime</strong>Modelo 3D · Pose de referencia</figcaption>
+          </figure>
+          <figure>
+            <img src="images/personaje-anime-azul.jpg" alt="Personaje anime 3D con vestuario deportivo azul y blanco">
+            <figcaption><strong>Diseño de personaje</strong>Estilo deportivo · Modelado 3D</figcaption>
+          </figure>
+          <figure>
+            <img src="images/modelado-blender.jpg" alt="Proceso de modelado y malla 3D en software de creación">
+            <figcaption><strong>Proceso de modelado</strong>Malla, detalles y preparación del personaje</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="recursos">
+      <div class="container">
+        <div class="section-head">
+          <h2>Explora y <span>aprende</span></h2>
+          <p>Herramientas y comunidades para inspirarte y seguir desarrollando tus habilidades 3D.</p>
+        </div>
+        <div class="resources">
+          <a class="resource" href="https://www.mixamo.com/#/" target="_blank" rel="noopener noreferrer"><span class="icon">🕺</span><span><strong>Mixamo</strong><small>Animaciones y personajes 3D</small></span></a>
+          <a class="resource" href="https://pixabay.com/es/videos/search/3d%20anime/" target="_blank" rel="noopener noreferrer"><span class="icon">🎞️</span><span><strong>Pixabay</strong><small>Videos e inspiración visual</small></span></a>
+          <a class="resource" href="https://www.blender.org/" target="_blank" rel="noopener noreferrer"><span class="icon">🟠</span><span><strong>Blender</strong><small>Software de creación 3D</small></span></a>
+          <a class="resource" href="https://www.instagram.com/kensyouen_y/" target="_blank" rel="noopener noreferrer"><span class="icon">📸</span><span><strong>Instagram</strong><small>@kensyouen_y</small></span></a>
+          <a class="resource" href="https://twitter.com/cgmeetup" target="_blank" rel="noopener noreferrer"><span class="icon">𝕏</span><span><strong>X / Twitter</strong><small>CGMeetup</small></span></a>
+          <a class="resource" href="https://www.youtube.com/@CGMeetup" target="_blank" rel="noopener noreferrer"><span class="icon">▶️</span><span><strong>YouTube</strong><small>CGMeetup · Arte y animación</small></span></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="ubicacion">
+      <div class="container">
+        <div class="section-head">
+          <h2>Encuéntranos <span>en el mapa</span></h2>
+          <p>Ubicación de referencia compartida para Studio 3D Animación.</p>
+        </div>
+        <div class="location-box">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3903.013120006453!2d-76.96719712494006!3d-11.973593288257485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTHCsDU4JzI0LjkiUyA3NsKwNTcnNTIuNiJX!5e0!3m2!1ses!2spe!4v1793565643605!5m2!1ses!2spe"
+            title="Mapa de ubicación de referencia de Studio 3D Animación"
+            loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin">
+          </iframe>
+          <p class="location-note">📍 Lima, Perú · Mapa de referencia</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-links">
+        <a href="https://www.youtube.com/@CGMeetup" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="https://www.instagram.com/kensyouen_y/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://twitter.com/cgmeetup" target="_blank" rel="noopener noreferrer">X / Twitter</a>
+      </div>
+      <p>© 2026 <strong>Studio 3D Animación</strong> · Creando ideas en tres dimensiones.</p>
+    </div>
+  </footer>
+</body>
+</html>
